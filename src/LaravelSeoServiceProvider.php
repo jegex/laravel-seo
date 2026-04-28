@@ -2,6 +2,7 @@
 
 namespace Jegex\LaravelSeo;
 
+use Jegex\LaravelSeo\Commands\AnalyzeSeoCommand;
 use Jegex\LaravelSeo\Commands\LaravelSeoCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -20,6 +21,9 @@ class LaravelSeoServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->discoversMigrations()
-            ->hasCommand(LaravelSeoCommand::class);
+            ->hasCommands([
+                LaravelSeoCommand::class,
+                AnalyzeSeoCommand::class
+            ]);
     }
 }

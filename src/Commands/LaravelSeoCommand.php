@@ -15,7 +15,7 @@ class LaravelSeoCommand extends Command
     public function handle(): int
     {
         $this->info('╔══════════════════════════════════════════╗');
-        $this->info('║        Jegex Laravel SEO Package        ║');
+        $this->info('║        Jegex Laravel SEO Package         ║');
         $this->info('╚══════════════════════════════════════════╝');
         $this->newLine();
 
