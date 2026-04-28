@@ -87,8 +87,8 @@ class SitemapService
     /**
      * Collect URLs from a model.
      *
-     * @param class-string $modelClass
-     * @param array<string, mixed> $config
+     * @param  class-string  $modelClass
+     * @param  array<string, mixed>  $config
      */
     protected function collectFromModel(string $modelClass, array $config): void
     {

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Jegex\LaravelSeo\Services;
 
-use Jegex\LaravelSeo\Schemas\BaseSchema;
 use Jegex\LaravelSeo\Schemas\ArticleSchema;
-use Jegex\LaravelSeo\Schemas\WebSiteSchema;
-use Jegex\LaravelSeo\Schemas\OrganizationSchema;
+use Jegex\LaravelSeo\Schemas\BaseSchema;
 use Jegex\LaravelSeo\Schemas\BreadcrumbListSchema;
+use Jegex\LaravelSeo\Schemas\OrganizationSchema;
+use Jegex\LaravelSeo\Schemas\WebSiteSchema;
 
 class SchemaService
 {
@@ -30,7 +30,7 @@ class SchemaService
      */
     public function article(): ArticleSchema
     {
-        $schema = new ArticleSchema();
+        $schema = new ArticleSchema;
         $this->add($schema);
 
         return $schema;
@@ -41,7 +41,7 @@ class SchemaService
      */
     public function website(): WebSiteSchema
     {
-        $schema = new WebSiteSchema();
+        $schema = new WebSiteSchema;
         $this->add($schema);
 
         return $schema;
@@ -52,7 +52,7 @@ class SchemaService
      */
     public function organization(): OrganizationSchema
     {
-        $schema = new OrganizationSchema();
+        $schema = new OrganizationSchema;
         $this->add($schema);
 
         return $schema;
@@ -63,7 +63,7 @@ class SchemaService
      */
     public function breadcrumbs(): BreadcrumbListSchema
     {
-        $schema = new BreadcrumbListSchema();
+        $schema = new BreadcrumbListSchema;
         $this->add($schema);
 
         return $schema;

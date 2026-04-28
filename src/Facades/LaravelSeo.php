@@ -27,7 +27,7 @@ use Jegex\LaravelSeo\Services\SeoService;
  * @method static \Jegex\LaravelSeo\Services\TemplateParserService parser()
  * @method static \Jegex\LaravelSeo\Services\SeoService reset()
  *
- * @see \Jegex\LaravelSeo\Services\SeoService
+ * @see SeoService
  */
 class LaravelSeo extends Facade
 {

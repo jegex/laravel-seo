@@ -159,7 +159,7 @@ trait HasSeo
     /**
      * Set the SEO entry attributes.
      *
-     * @param array<string, mixed> $attributes
+     * @param  array<string, mixed>  $attributes
      */
     public function setSeo(array $attributes): SeoEntry
     {

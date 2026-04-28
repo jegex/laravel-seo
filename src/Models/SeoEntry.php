@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Jegex\LaravelSeo\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Jegex\LaravelSeo\Services\AnalyzerService;
 
 class SeoEntry extends Model
 {
@@ -152,7 +153,7 @@ class SeoEntry extends Model
             'focus_keyword' => $this->focus_keyword,
         ];
 
-        return app(\Jegex\LaravelSeo\Services\AnalyzerService::class)
+        return app(AnalyzerService::class)
             ->analyze($content, $data);
     }
 

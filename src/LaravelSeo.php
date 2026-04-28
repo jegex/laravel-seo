@@ -24,4 +24,3 @@ class LaravelSeo
         return app(SeoService::class);
     }
 }
-

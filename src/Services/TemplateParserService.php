@@ -19,8 +19,8 @@ class TemplateParserService implements TemplateParserContract
     /**
      * Parse a template string and replace variables with actual values.
      *
-     * @param string $template The template string (e.g., "%title% %sep% %sitename%")
-     * @param array<string, mixed> $data Data to use for variable replacement
+     * @param  string  $template  The template string (e.g., "%title% %sep% %sitename%")
+     * @param  array<string, mixed>  $data  Data to use for variable replacement
      */
     public function parse(string $template, array $data = []): string
     {
@@ -107,8 +107,8 @@ class TemplateParserService implements TemplateParserContract
     /**
      * Register a custom variable parser.
      *
-     * @param string $variable The variable name (e.g., "%custom%")
-     * @param callable $callback Callback that receives data and returns string
+     * @param  string  $variable  The variable name (e.g., "%custom%")
+     * @param  callable  $callback  Callback that receives data and returns string
      */
     public function registerVariable(string $variable, callable $callback): void
     {
