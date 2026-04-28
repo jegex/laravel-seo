@@ -28,8 +28,6 @@ return new class extends Migration
             $table->string('focus_keyword')->nullable();
             $table->unsignedTinyInteger('seo_score')->nullable(); // 0-100
             $table->timestamps();
-
-            $table->index(['model_type', 'model_id']);
         });
     }
 
