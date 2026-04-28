@@ -19,7 +19,7 @@ class LaravelSeoServiceProvider extends PackageServiceProvider
             ->name('laravel-seo')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_laravel_seo_table')
+            ->discoversMigrations()
             ->hasCommand(LaravelSeoCommand::class);
     }
 }
