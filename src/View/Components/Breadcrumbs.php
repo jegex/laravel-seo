@@ -10,13 +10,12 @@ use Illuminate\View\View;
 class Breadcrumbs extends Component
 {
     /**
-     * @param array<int, array{name: string, url: string}> $items
+     * @param  array<int, array{name: string, url: string}>  $items
      */
     public function __construct(
         public array $items = [],
         public bool $jsonLd = true,
-    ) {
-    }
+    ) {}
 
     public function render(): View
     {

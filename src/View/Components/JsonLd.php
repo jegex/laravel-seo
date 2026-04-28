@@ -10,13 +10,12 @@ use Illuminate\View\View;
 class JsonLd extends Component
 {
     /**
-     * @param array<string, mixed> $schema
+     * @param  array<string, mixed>  $schema
      */
     public function __construct(
         public array $schema = [],
         public ?string $type = null,
-    ) {
-    }
+    ) {}
 
     public function render(): View
     {

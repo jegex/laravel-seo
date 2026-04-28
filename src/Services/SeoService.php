@@ -17,8 +17,7 @@ class SeoService
         protected MetaTagService $metaTags,
         protected TemplateParserService $parser,
         protected SchemaService $schema,
-    ) {
-    }
+    ) {}
 
     /**
      * Set the SEO-able model for context.
@@ -222,7 +221,7 @@ class SeoService
     /**
      * Add a JSON-LD schema.
      *
-     * @param string $type Schema type (article, website, organization, breadcrumbs)
+     * @param  string  $type  Schema type (article, website, organization, breadcrumbs)
      */
     public function addSchema(string $type): Schemas\BaseSchema
     {

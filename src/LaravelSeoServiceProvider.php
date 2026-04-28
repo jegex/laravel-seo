@@ -2,9 +2,9 @@
 
 namespace Jegex\LaravelSeo;
 
+use Jegex\LaravelSeo\Commands\LaravelSeoCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Jegex\LaravelSeo\Commands\LaravelSeoCommand;
 
 class LaravelSeoServiceProvider extends PackageServiceProvider
 {

@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
+use Jegex\LaravelSeo\Schemas\BaseSchema;
+use Jegex\LaravelSeo\Services\SchemaService;
 use Jegex\LaravelSeo\Services\SeoService;
+use Jegex\LaravelSeo\Services\TemplateParserService;
 
 if (! function_exists('seo')) {
     /**
      * Get the SEO service instance or set SEO data.
-     *
-     * @param string|null $key
-     * @param mixed $value
-     * @return SeoService
      */
     function seo(?string $key = null, mixed $value = null): SeoService
     {
@@ -38,8 +37,6 @@ if (! function_exists('seo')) {
 if (! function_exists('seo_meta')) {
     /**
      * Render SEO meta tags.
-     *
-     * @return string
      */
     function seo_meta(): string
     {
@@ -50,9 +47,6 @@ if (! function_exists('seo_meta')) {
 if (! function_exists('seo_title')) {
     /**
      * Set or get SEO title.
-     *
-     * @param string|null $title
-     * @return string|SeoService
      */
     function seo_title(?string $title = null): string|SeoService
     {
@@ -69,9 +63,6 @@ if (! function_exists('seo_title')) {
 if (! function_exists('seo_description')) {
     /**
      * Set or get SEO description.
-     *
-     * @param string|null $description
-     * @return string|SeoService
      */
     function seo_description(?string $description = null): string|SeoService
     {
@@ -88,9 +79,6 @@ if (! function_exists('seo_description')) {
 if (! function_exists('seo_canonical')) {
     /**
      * Set or get canonical URL.
-     *
-     * @param string|null $url
-     * @return string|SeoService
      */
     function seo_canonical(?string $url = null): string|SeoService
     {
@@ -107,10 +95,6 @@ if (! function_exists('seo_canonical')) {
 if (! function_exists('seo_og')) {
     /**
      * Set Open Graph data.
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return SeoService
      */
     function seo_og(string $key, mixed $value): SeoService
     {
@@ -131,13 +115,10 @@ if (! function_exists('seo_og')) {
 if (! function_exists('seo_schema')) {
     /**
      * Get the SchemaService instance or add a schema.
-     *
-     * @param string|null $type
-     * @return \Jegex\LaravelSeo\Services\SchemaService|\Jegex\LaravelSeo\Schemas\BaseSchema
      */
-    function seo_schema(?string $type = null): \Jegex\LaravelSeo\Services\SchemaService|\Jegex\LaravelSeo\Schemas\BaseSchema
+    function seo_schema(?string $type = null): SchemaService|BaseSchema
     {
-        $service = app(\Jegex\LaravelSeo\Services\SchemaService::class);
+        $service = app(SchemaService::class);
 
         if ($type) {
             return match ($type) {
@@ -145,7 +126,7 @@ if (! function_exists('seo_schema')) {
                 'website' => $service->website(),
                 'organization' => $service->organization(),
                 'breadcrumbs' => $service->breadcrumbs(),
-                default => throw new \InvalidArgumentException("Unknown schema type: {$type}"),
+                default => throw new InvalidArgumentException("Unknown schema type: {$type}"),
             };
         }
 
@@ -156,12 +137,10 @@ if (! function_exists('parse_seo_template')) {
     /**
      * Parse an SEO template with variables.
      *
-     * @param string $template
-     * @param array<string, mixed> $data
-     * @return string
+     * @param  array<string, mixed>  $data
      */
     function parse_seo_template(string $template, array $data = []): string
     {
-        return app(\Jegex\LaravelSeo\Services\TemplateParserService::class)->parse($template, $data);
+        return app(TemplateParserService::class)->parse($template, $data);
     }
 }

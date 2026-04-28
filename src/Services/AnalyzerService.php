@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Jegex\LaravelSeo\Services;
 
-use Illuminate\Support\Facades\Config;
-
 class AnalyzerService
 {
     /** @var array<int, string> */
@@ -17,8 +15,7 @@ class AnalyzerService
     /**
      * Analyze content and return SEO score (0-100).
      *
-     * @param string $content
-     * @param array<string, mixed> $seoData
+     * @param  array<string, mixed>  $seoData
      * @return array<string, mixed>
      */
     public function analyze(string $content, array $seoData = []): array
@@ -237,7 +234,7 @@ class AnalyzerService
     {
         $domain = parse_url(config('app.url'), PHP_URL_HOST);
 
-        return preg_match_all('/href=["\'](?:\/[^"\']*|https?:\/\/' . preg_quote($domain, '/') . '[^"\']*)["\']/i', $content);
+        return preg_match_all('/href=["\'](?:\/[^"\']*|https?:\/\/'.preg_quote($domain, '/').'[^"\']*)["\']/i', $content);
     }
 
     /**
@@ -247,7 +244,7 @@ class AnalyzerService
     {
         $domain = parse_url(config('app.url'), PHP_URL_HOST);
 
-        return preg_match_all('/href=["\']https?:\/\/(?!' . preg_quote($domain, '/') . ')[^"\']+["\']/i', $content);
+        return preg_match_all('/href=["\']https?:\/\/(?!'.preg_quote($domain, '/').')[^"\']+["\']/i', $content);
     }
 
     /**
@@ -268,10 +265,6 @@ class AnalyzerService
 
     /**
      * Add a check result.
-     *
-     * @param string $key
-     * @param bool $passed
-     * @param string $message
      */
     protected function addCheck(string $key, bool $passed, string $message): void
     {
@@ -317,7 +310,7 @@ class AnalyzerService
         $maxLength = 60;
 
         if (strlen($title) > $maxLength) {
-            return substr($title, 0, $maxLength - 3) . '...';
+            return substr($title, 0, $maxLength - 3).'...';
         }
 
         return $title;
@@ -331,7 +324,7 @@ class AnalyzerService
         $maxLength = 160;
 
         if (strlen($description) > $maxLength) {
-            return substr($description, 0, $maxLength - 3) . '...';
+            return substr($description, 0, $maxLength - 3).'...';
         }
 
         return $description;

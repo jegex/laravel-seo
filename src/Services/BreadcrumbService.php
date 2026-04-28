@@ -64,7 +64,7 @@ class BreadcrumbService
                 // Last part - current page
                 $this->add(ucfirst($part), url()->current());
             } else {
-                $currentUrl .= $part . '/';
+                $currentUrl .= $part.'/';
                 $this->add(ucfirst($part), url($currentUrl));
             }
         }
@@ -89,16 +89,16 @@ class BreadcrumbService
             return '';
         }
 
-        $html = '<nav aria-label="breadcrumb"><ol class="' . $class . '">';
+        $html = '<nav aria-label="breadcrumb"><ol class="'.$class.'">';
 
         foreach ($this->items as $index => $item) {
             $isLast = $index === count($this->items) - 1;
-            $html .= '<li class="breadcrumb-item' . ($isLast ? ' active' : '') . '"' . ($isLast ? ' aria-current="page"' : '') . '>';
+            $html .= '<li class="breadcrumb-item'.($isLast ? ' active' : '').'"'.($isLast ? ' aria-current="page"' : '').'>';
 
             if ($isLast) {
                 $html .= e($item['name']);
             } else {
-                $html .= '<a href="' . e($item['url']) . '">' . e($item['name']) . '</a>';
+                $html .= '<a href="'.e($item['url']).'">'.e($item['name']).'</a>';
             }
 
             $html .= '</li>';
@@ -114,7 +114,7 @@ class BreadcrumbService
      */
     public function generateSchema(): BreadcrumbListSchema
     {
-        $schema = new BreadcrumbListSchema();
+        $schema = new BreadcrumbListSchema;
 
         foreach ($this->items as $item) {
             $schema->addItem($item['name'], $item['url'], $item['image'] ?? null);

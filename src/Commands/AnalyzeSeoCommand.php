@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jegex\LaravelSeo\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
 use Jegex\LaravelSeo\Models\SeoEntry;
 
 class AnalyzeSeoCommand extends Command
@@ -84,7 +83,7 @@ class AnalyzeSeoCommand extends Command
             }
 
             if ($entriesWithAlerts->count() > 5) {
-                $this->line("\n  ... and " . ($entriesWithAlerts->count() - 5) . ' more entries with issues');
+                $this->line("\n  ... and ".($entriesWithAlerts->count() - 5).' more entries with issues');
             }
         }
 

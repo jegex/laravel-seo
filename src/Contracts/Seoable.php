@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Jegex\LaravelSeo\Contracts;
 
-use Jegex\LaravelSeo\Models\SeoEntry;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 interface Seoable
 {
     /**
      * Get the SEO entry associated with this model.
      */
-    public function seoEntry(): \Illuminate\Database\Eloquent\Relations\MorphOne;
+    public function seoEntry(): MorphOne;
 
     /**
      * Get the default SEO title for this model.
