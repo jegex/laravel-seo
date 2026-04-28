@@ -36,7 +36,10 @@
         "psr-4": {
             "Jegex\\LaravelSeo\\": "src/",
             "Jegex\\LaravelSeo\\Database\\Factories\\": "database/factories/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
