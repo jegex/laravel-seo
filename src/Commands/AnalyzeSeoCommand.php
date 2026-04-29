@@ -55,7 +55,7 @@ class AnalyzeSeoCommand extends Command
                 $entry->id,
                 class_basename($entry->model_type),
                 $entry->model_id,
-                $entry->title ? str_limit($entry->title, 40) : '-',
+                $entry->title ? str($entry->title)->limit(40) : '-',
                 $scoreStr,
                 count($analysis['alerts']),
             ];

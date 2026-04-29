@@ -151,9 +151,9 @@ trait HasSeo
     /**
      * Check if model has the given attribute.
      */
-    public function hasAttribute(string $attribute): bool
+    public function hasAttribute($key): bool
     {
-        return array_key_exists($attribute, $this->getAttributes());
+        return array_key_exists($key, $this->getAttributes());
     }
 
     /**

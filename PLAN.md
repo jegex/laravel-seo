@@ -208,8 +208,6 @@ src/
 │   ├── RedirectService.php            # Redirect handling
 │   ├── AnalyzerService.php            # SEO content analysis
 │   └── BreadcrumbService.php          # Breadcrumbs
-├── Managers/
-│   └── SeoManager.php                 # Central SEO manager
 ├── Facades/
 │   └── LaravelSeo.php                 # Facade
 ├── Http/
