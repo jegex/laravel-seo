@@ -8,6 +8,22 @@ return [
     |
     | Basic information about your website used in meta tags.
     |
+    | Supports both single language (string) and multilanguage (array) formats.
+    |
+    | Single language:
+    |   'site_name' => 'My Website',
+    |   'site_description' => 'My website description',
+    |
+    | Multilanguage (optional):
+    |   'site_name' => [
+    |       'en' => 'My Website',
+    |       'id' => 'Website Saya',
+    |   ],
+    |   'site_description' => [
+    |       'en' => 'Description in English',
+    |       'id' => 'Deskripsi dalam Bahasa Indonesia',
+    |   ],
+    |
     */
     'site_name' => env('SEO_SITE_NAME', config('app.name')),
     'site_description' => env('SEO_SITE_DESCRIPTION', ''),
