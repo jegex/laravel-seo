@@ -23,7 +23,7 @@ class LaravelSeoServiceProvider extends PackageServiceProvider
             ->discoversMigrations()
             ->hasCommands([
                 LaravelSeoCommand::class,
-                AnalyzeSeoCommand::class
+                AnalyzeSeoCommand::class,
             ]);
     }
 }
