@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jegex\LaravelSeo\Services;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\App;
 use Jegex\LaravelSeo\Contracts\TemplateParser as TemplateParserContract;
 
 class TemplateParserService implements TemplateParserContract
@@ -17,6 +18,29 @@ class TemplateParserService implements TemplateParserContract
     protected array $customVariables = [];
 
     /**
+     * Get localized config value.
+     * Supports both single language (string) and multilanguage (array) formats.
+     *
+     * @param  string  $key  Config key (e.g., 'seo.site_name')
+     * @param  mixed  $default  Default value if config not found
+     */
+    protected function getLocalizedConfig(string $key, mixed $default = null): mixed
+    {
+        $value = Config::get($key, $default);
+
+        // If value is array, treat as multilanguage and return based on current locale
+        if (is_array($value)) {
+            $locale = App::getLocale();
+            $fallback = Config::get('app.fallback_locale', 'en');
+
+            return $value[$locale] ?? $value[$fallback] ?? reset($value) ?? $default;
+        }
+
+        // Return as-is for single language (string) format
+        return $value;
+    }
+
+    /**
      * Parse a template string and replace variables with actual values.
      *
      * @param  string  $template  The template string (e.g., "%title% %sep% %sitename%")
@@ -25,8 +49,8 @@ class TemplateParserService implements TemplateParserContract
     public function parse(string $template, array $data = []): string
     {
         $variables = $this->getVariables();
-        $siteName = Config::get('seo.site_name', config('app.name'));
-        $siteDesc = Config::get('seo.site_description', '');
+        $siteName = $this->getLocalizedConfig('seo.site_name', config('app.name'));
+        $siteDesc = $this->getLocalizedConfig('seo.site_description', '');
         $separator = Config::get('seo.separator', ' - ');
 
         // Built-in replacements that don't depend on model data
@@ -125,8 +149,8 @@ class TemplateParserService implements TemplateParserContract
         return [
             '%title%' => fn ($data) => $data['title'] ?? '',
             '%sep%' => fn () => Config::get('seo.separator', ' - '),
-            '%sitename%' => fn () => Config::get('seo.site_name', config('app.name')),
-            '%sitedesc%' => fn () => Config::get('seo.site_description', ''),
+            '%sitename%' => fn () => $this->getLocalizedConfig('seo.site_name', config('app.name')),
+            '%sitedesc%' => fn () => $this->getLocalizedConfig('seo.site_description', ''),
             '%currentdate%' => fn () => now()->format('F j, Y'),
             '%currentday%' => fn () => now()->format('j'),
             '%currentmonth%' => fn () => now()->format('F'),
