@@ -6,180 +6,92 @@ namespace Jegex\LaravelSeo\Services;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Database\Eloquent\Model;
 
 class SitemapService
 {
-    /** @var array<int, array<string, mixed>> */
     protected array $urls = [];
 
     /**
-     * Generate XML sitemap content.
+     * Generate XML sitemap content dengan efisiensi memori.
      */
     public function generate(): string
     {
-        $this->collectUrls();
+        // Gunakan buffer output untuk menangani string besar
+        ob_start();
 
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL;
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'.PHP_EOL;
+        echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
 
-        foreach ($this->urls as $url) {
-            $xml .= '  <url>'.PHP_EOL;
-            $xml .= '    <loc>'.htmlspecialchars($url['loc']).'</loc>'.PHP_EOL;
+        // Tambahkan halaman utama
+        $this->renderUrl(URL::to('/'), now()->toAtomString(), 'daily', '1.0');
 
-            if (isset($url['lastmod'])) {
-                $xml .= '    <lastmod>'.$url['lastmod'].'</lastmod>'.PHP_EOL;
-            }
-
-            if (isset($url['changefreq'])) {
-                $xml .= '    <changefreq>'.$url['changefreq'].'</changefreq>'.PHP_EOL;
-            }
-
-            if (isset($url['priority'])) {
-                $xml .= '    <priority>'.$url['priority'].'</priority>'.PHP_EOL;
-            }
-
-            $xml .= '  </url>'.PHP_EOL;
-        }
-
-        $xml .= '</urlset>';
-
-        return $xml;
-    }
-
-    /**
-     * Collect all URLs for the sitemap.
-     */
-    protected function collectUrls(): void
-    {
-        $this->urls = [];
-
-        // Add home page
-        $this->addUrl(
-            URL::to('/'),
-            null,
-            'daily',
-            '1.0'
-        );
-
-        // Collect from configured models
+        // Proses model secara bertahap (Chunking)
         $modelConfigs = Config::get('seo.sitemap.models', []);
-
         foreach ($modelConfigs as $modelClass => $config) {
-            $this->collectFromModel($modelClass, $config);
+            $this->processModelChunks($modelClass, $config);
         }
+
+        echo '</urlset>';
+
+        return ob_get_clean();
     }
 
     /**
-     * Add a URL to the sitemap.
+     * Memproses data model menggunakan Chunking untuk menghemat RAM.
      */
-    public function addUrl(string $url, ?string $lastmod = null, string $changefreq = 'weekly', string $priority = '0.5'): self
+    protected function processModelChunks(string $modelClass, array $config): void
     {
-        $this->urls[] = [
-            'loc' => $url,
-            'lastmod' => $lastmod,
-            'changefreq' => $changefreq,
-            'priority' => $priority,
-        ];
+        if (!class_exists($modelClass)) return;
 
-        return $this;
-    }
+        $query = $modelClass::query();
 
-    /**
-     * Collect URLs from a model.
-     *
-     * @param  class-string  $modelClass
-     * @param  array<string, mixed>  $config
-     */
-    protected function collectFromModel(string $modelClass, array $config): void
-    {
-        if (! class_exists($modelClass)) {
-            return;
-        }
+        // Terapkan scope jika tersedia
+        if (method_exists($modelClass, 'scopePublished')) $query->published();
+        if (method_exists($modelClass, 'scopeActive')) $query->active();
 
-        try {
-            $query = $modelClass::query();
-
-            // Only get published/active items if the model has those scopes
-            if (method_exists($modelClass, 'published')) {
-                $query->published();
-            }
-
-            if (method_exists($modelClass, 'active')) {
-                $query->active();
-            }
-
-            $items = $query->get();
-
+        // Ambil data per 1000 item agar tidak membebani memori
+        $query->chunk(1000, function ($items) use ($config) {
             foreach ($items as $item) {
                 $url = $this->getItemUrl($item);
-
-                if (! $url) {
-                    continue;
+                if ($url) {
+                    $this->renderUrl(
+                        $url,
+                        $this->getLastModified($item),
+                        $config['changefreq'] ?? 'weekly',
+                        $config['priority'] ?? '0.5'
+                    );
                 }
-
-                $this->addUrl(
-                    $url,
-                    $this->getLastModified($item),
-                    $config['changefreq'] ?? 'weekly',
-                    $config['priority'] ?? '0.5'
-                );
             }
-        } catch (\Exception $e) {
-            // Silently fail - sitemap should not break the site
-        }
+        });
     }
 
     /**
-     * Get URL for a model instance.
+     * Langsung mencetak tag XML (mengurangi beban array di memori).
      */
-    protected function getItemUrl($item): ?string
+    protected function renderUrl(string $url, ?string $lastmod, string $freq, string $priority): void
     {
-        // Try to get URL from the item
-        if (method_exists($item, 'getUrl')) {
-            return $item->getUrl();
-        }
+        echo "  <url>" . PHP_EOL;
+        echo "    <loc>" . htmlspecialchars($url) . "</loc>" . PHP_EOL;
+        if ($lastmod) echo "    <lastmod>{$lastmod}</lastmod>" . PHP_EOL;
+        echo "    <changefreq>{$freq}</changefreq>" . PHP_EOL;
+        echo "    <priority>{$priority}</priority>" . PHP_EOL;
+        echo "  </url>" . PHP_EOL;
+    }
 
-        if (method_exists($item, 'getRouteKey')) {
-            return URL::to($item->getRouteKey());
-        }
+    protected function getItemUrl(Model $item): ?string
+    {
+        if (method_exists($item, 'getUrl')) return $item->getUrl();
 
-        // Try to construct from slug
-        if (isset($item->slug)) {
-            return URL::to($item->slug);
-        }
+        // Direkomendasikan menggunakan route name agar lebih fleksibel
+        // Misal model memiliki properti/method route_name
+        if (isset($item->slug)) return URL::to($item->slug);
 
         return null;
     }
 
-    /**
-     * Get last modified date for a model instance.
-     */
-    protected function getLastModified($item): ?string
+    protected function getLastModified(Model $item): ?string
     {
-        if (isset($item->updated_at)) {
-            return $item->updated_at->toAtomString();
-        }
-
-        return null;
-    }
-
-    /**
-     * Get all collected URLs.
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    public function getUrls(): array
-    {
-        return $this->urls;
-    }
-
-    /**
-     * Clear all URLs.
-     */
-    public function clear(): self
-    {
-        $this->urls = [];
-
-        return $this;
+        return $item->updated_at?->toAtomString();
     }
 }
