@@ -6,7 +6,6 @@ namespace Jegex\LaravelSeo\Services;
 
 use Illuminate\Support\Facades\Config;
 use Jegex\LaravelSeo\Contracts\Seoable;
-use Illuminate\Support\Str;
 
 class SeoService
 {
@@ -16,14 +15,14 @@ class SeoService
      * Pemetaan antara kunci config dan metode di MetaTagService.
      */
     protected array $templateMapping = [
-        'title'               => 'setTitle',
-        'description'         => 'setDescription',
-        'og:title'            => 'setOgTitle',
-        'og:description'      => 'setOgDescription',
-        'og:image'            => 'setOgImage',
-        'twitter:title'       => 'setTwitterTitle',
+        'title' => 'setTitle',
+        'description' => 'setDescription',
+        'og:title' => 'setOgTitle',
+        'og:description' => 'setOgDescription',
+        'og:image' => 'setOgImage',
+        'twitter:title' => 'setTwitterTitle',
         'twitter:description' => 'setTwitterDescription',
-        'twitter:image'       => 'setTwitterImage',
+        'twitter:image' => 'setTwitterImage',
     ];
 
     public function __construct(
@@ -36,6 +35,7 @@ class SeoService
     {
         $this->model = $model;
         $this->metaTags->for($model);
+
         return $this;
     }
 
@@ -47,10 +47,11 @@ class SeoService
     {
         if (method_exists($this->metaTags, $name)) {
             $result = $this->metaTags->{$name}(...$arguments);
+
             return $result instanceof MetaTagService ? $this : $result;
         }
 
-        throw new \BadMethodCallException("Method {$name} does not exist on " . static::class);
+        throw new \BadMethodCallException("Method {$name} does not exist on ".static::class);
     }
 
     /**

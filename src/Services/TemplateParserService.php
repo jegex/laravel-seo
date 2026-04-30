@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jegex\LaravelSeo\Services;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Jegex\LaravelSeo\Contracts\TemplateParser as TemplateParserContract;
 
 class TemplateParserService implements TemplateParserContract
