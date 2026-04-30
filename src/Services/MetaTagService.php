@@ -75,7 +75,7 @@ class MetaTagService
 
         // Get SEO entry if exists - menggunakan eager loading check untuk menghindari N+1
         $seoEntry = $model->seoEntry;
-        
+
         if ($seoEntry) {
             $this->title = $seoEntry->getEffectiveTitle($defaultTitle);
             $this->description = $seoEntry->getEffectiveDescription($defaultDesc);
@@ -344,7 +344,7 @@ class MetaTagService
     protected function addMetaTag(array &$tags, string $name, ?string $content): void
     {
         if ($content) {
-            $tags[] = sprintf('<meta %s content="%s">', 
+            $tags[] = sprintf('<meta %s content="%s">',
                 str_starts_with($name, 'og:') ? 'property' : 'name',
                 e($content)
             );
